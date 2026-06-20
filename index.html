@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cultivando el futuro — The Elite Flower</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --petal:#d8456b;        /* rosa profundo, la flor */
+    --petal-deep:#a82850;
+    --stem:#2f5d44;         /* verde tallo */
+    --stem-deep:#1c3a2b;
+    --soil:#3a2c25;         /* tierra */
+    --cream:#f7f2ec;        /* fondo papel */
+    --cream-2:#efe7dc;
+    --ink:#241c19;
+    --muted:#6f635b;
+    --gold:#c89b3c;
+    --line:#e0d5c7;
+    --warn:#b5402f;
+    --ok:#3a7d54;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--petal);color:#fff}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    overflow:hidden;
+    background:
+      radial-gradient(120% 90% at 80% -10%, rgba(216,69,107,.22), transparent 55%),
+      linear-gradient(160deg,#fbf7f1 0%, #f1e8db 100%);
+    padding:clamp(1.8rem,4vw,3rem) clamp(1.2rem,5vw,5rem) clamp(1.8rem,4vw,3rem);
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.78rem;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--petal-deep);
+    display:flex;align-items:center;gap:.7rem;
+    margin-bottom:1rem;
+  }
+  .eyebrow::before{content:"";width:34px;height:1px;background:var(--petal-deep)}
+  .hero h1{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:clamp(2.1rem,5vw,4.3rem);
+    line-height:1;
+    letter-spacing:-.02em;
+    max-width:18ch;
+    margin-bottom:1.1rem;
+  }
+  .hero h1 em{font-style:italic;color:var(--petal)}
+  .hero .lede{
+    font-size:clamp(1rem,1.5vw,1.2rem);
+    max-width:62ch;color:var(--muted);
+  }
+  .hero-byline{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.74rem;letter-spacing:.06em;
+    color:var(--soil);margin-top:1.2rem;
+    display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .9rem;
+  }
+  .hero-byline .who{color:var(--muted)}
+  .hero-byline b{color:var(--stem-deep);font-weight:600}
+  .hero-stats{
+    display:flex;flex-wrap:wrap;gap:2rem;margin-top:1.8rem;
+  }
+  .hstat .n{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.8rem,3vw,2.6rem);line-height:1;color:var(--stem-deep)}
+  .hstat .l{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.5rem}
+  /* tallos decorativos */
+  .stems{position:absolute;right:2%;bottom:0;top:0;width:30%;pointer-events:none;opacity:.9;display:none}
+  @media(min-width:1000px){.stems{display:block}}
+
+  /* ---------- NAV TABS ---------- */
+  .tabs-wrap{
+    position:sticky;top:0;z-index:50;
+    background:rgba(247,242,236,.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .tabs{
+    display:flex;gap:.3rem;overflow-x:auto;
+    padding:.6rem clamp(1rem,5vw,5rem);
+    max-width:1200px;margin:0 auto;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex:0 0 auto;
+    border:none;background:none;cursor:pointer;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.8rem;letter-spacing:.04em;
+    color:var(--muted);
+    padding:.6rem .95rem;border-radius:999px;
+    display:flex;align-items:center;gap:.5rem;
+    transition:.2s;white-space:nowrap;
+  }
+  .tab span.dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:.2s}
+  .tab:hover{color:var(--ink);background:var(--cream-2)}
+  .tab.active{color:#fff;background:var(--stem-deep)}
+  .tab.active span.dot{background:var(--petal)}
+
+  /* ---------- PANELS ---------- */
+  main{max-width:1080px;margin:0 auto;padding:clamp(1.8rem,3.5vw,3rem) clamp(1.2rem,5vw,3rem) 5rem}
+  .panel{display:none;animation:fade .5s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .sec-num{font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.2em;color:var(--petal-deep);text-transform:uppercase}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.9rem,4vw,3rem);line-height:1.05;letter-spacing:-.01em;margin:.6rem 0 1.4rem}
+  h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.5rem;margin:2.5rem 0 1rem;color:var(--stem-deep)}
+  h4{font-family:'Inter',sans-serif;font-weight:700;font-size:1.05rem;margin:1.6rem 0 .6rem}
+  p{margin-bottom:1.1rem;max-width:68ch}
+  .intro-lede{font-size:1.18rem;color:var(--soil)}
+  strong{color:var(--petal-deep);font-weight:600}
+
+  /* cards */
+  .grid{display:grid;gap:1.2rem;margin:1.8rem 0}
+  .grid.two{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .grid.three{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:1.5rem;transition:.25s;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 40px -18px rgba(58,44,37,.35);border-color:var(--petal)}
+  .card .k{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:600;color:var(--petal);line-height:1}
+  .card .kl{font-size:.92rem;color:var(--muted);margin-top:.5rem}
+
+  /* portfolio chips */
+  .chips{display:flex;flex-wrap:wrap;gap:.55rem;margin:1.2rem 0 1.8rem}
+  .chip{background:var(--cream-2);border:1px solid var(--line);border-radius:999px;padding:.4rem .9rem;font-size:.85rem;color:var(--soil)}
+
+  /* distribution bars */
+  .dist{margin:1.5rem 0}
+  .dist-row{display:flex;align-items:center;gap:1rem;margin-bottom:.7rem}
+  .dist-row .lbl{flex:0 0 130px;font-size:.85rem;font-family:'IBM Plex Mono',monospace}
+  .dist-bar{flex:1;height:14px;background:var(--cream-2);border-radius:999px;overflow:hidden}
+  .dist-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--petal),var(--petal-deep));width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+  .dist-row .pct{flex:0 0 48px;text-align:right;font-weight:600;font-size:.9rem}
+
+  /* quote */
+  blockquote{
+    border-left:3px solid var(--gold);
+    background:linear-gradient(90deg,rgba(200,155,60,.08),transparent);
+    padding:1.4rem 1.6rem;margin:2rem 0;border-radius:0 12px 12px 0;
+    font-family:'Fraunces',serif;font-style:italic;font-size:1.25rem;color:var(--soil);max-width:none;
+  }
+  blockquote cite{display:block;margin-top:.8rem;font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:.78rem;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+
+  /* alert / finding cards */
+  .finding{background:#fff;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 12px 12px 0;padding:1.1rem 1.3rem;margin-bottom:.9rem}
+  .finding h4{margin:.1rem 0 .35rem;color:var(--warn)}
+  .finding.soft{border-left-color:var(--gold)}
+  .finding.soft h4{color:var(--gold)}
+
+  /* big metric callouts */
+  .callouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:2rem 0}
+  .callout{background:var(--stem-deep);color:#fff;border-radius:16px;padding:1.6rem;position:relative;overflow:hidden}
+  .callout::after{content:"";position:absolute;right:-30px;bottom:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,var(--petal),transparent 70%);opacity:.4}
+  .callout .big{font-family:'Fraunces',serif;font-size:2.8rem;font-weight:600;line-height:1;position:relative}
+  .callout .cap{font-size:.85rem;color:#cdd9d0;margin-top:.6rem;position:relative}
+
+  /* accordion */
+  .acc{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:.8rem;background:#fff}
+  .acc-head{width:100%;text-align:left;border:none;background:none;cursor:pointer;padding:1.1rem 1.3rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;font-family:'Inter';font-weight:600;font-size:1rem;color:var(--ink)}
+  .acc-head .ico{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--petal);color:var(--petal);display:grid;place-items:center;font-size:1.2rem;transition:.3s;line-height:0}
+  .acc.open .acc-head .ico{transform:rotate(45deg);background:var(--petal);color:#fff}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1.3rem}
+  .acc.open .acc-body{max-height:600px;padding-bottom:1.3rem}
+  .acc-body p{max-width:none}
+
+  /* timeline / plan */
+  .plan-switch{display:flex;gap:.5rem;margin:1.5rem 0;flex-wrap:wrap}
+  .pbtn{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:.55rem 1.2rem;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.05em;transition:.2s;color:var(--muted)}
+  .pbtn.active{background:var(--petal);border-color:var(--petal);color:#fff}
+  .plan-block{display:none}
+  .plan-block.active{display:block;animation:fade .4s}
+  .tl{position:relative;margin-left:.5rem;padding-left:1.8rem;border-left:2px dashed var(--line)}
+  .tl-item{position:relative;margin-bottom:1.4rem}
+  .tl-item::before{content:"";position:absolute;left:-2.27rem;top:.35rem;width:14px;height:14px;border-radius:50%;background:var(--cream);border:3px solid var(--petal)}
+  .tl-when{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.1em;color:var(--petal-deep);text-transform:uppercase}
+  .tl-action{font-weight:600;margin:.2rem 0 .25rem}
+  .tl-src{font-size:.82rem;color:var(--muted);font-style:italic}
+
+  /* table sector companies */
+  .companies{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem;margin:1.3rem 0}
+  .co{background:var(--cream-2);border-radius:10px;padding:.85rem 1rem;font-size:.92rem;border:1px solid var(--line)}
+  .co b{display:block;font-family:'Fraunces',serif;color:var(--stem-deep)}
+
+  footer{background:var(--stem-deep);color:#cdd9d0;padding:3rem clamp(1.2rem,5vw,5rem);font-size:.85rem}
+  footer .fl{font-family:'Fraunces',serif;color:#fff;font-size:1.4rem;margin-bottom:.6rem}
+
+  .pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.08em;padding:.25rem .65rem;border-radius:999px;background:var(--cream-2);color:var(--soil);border:1px solid var(--line);margin-bottom:.5rem}
+
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+  @media(max-width:600px){blockquote{font-size:1.05rem}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <svg class="stems" viewBox="0 0 300 600" fill="none" aria-hidden="true">
+    <path d="M150 600 C150 420 120 360 150 200" stroke="#2f5d44" stroke-width="4"/>
+    <path d="M150 320 C110 300 90 320 95 350 C130 350 150 340 150 320Z" fill="#3a7d54"/>
+    <path d="M150 260 C190 240 210 260 205 290 C170 290 150 280 150 260Z" fill="#3a7d54"/>
+    <g transform="translate(150 175)">
+      <circle r="46" fill="#a82850"/>
+      <circle r="46" fill="#d8456b" transform="rotate(20)" opacity=".55"/>
+      <path d="M0 -44 C24 -30 24 -8 0 0 C-24 -8 -24 -30 0 -44Z" fill="#e96e8d"/>
+      <path d="M44 0 C30 24 8 24 0 0 C8 -24 30 -24 44 0Z" fill="#e96e8d"/>
+      <path d="M0 44 C-24 30 -24 8 0 0 C24 8 24 30 0 44Z" fill="#e96e8d"/>
+      <path d="M-44 0 C-30 -24 -8 -24 0 0 C-8 24 -30 24 -44 0Z" fill="#e96e8d"/>
+      <circle r="14" fill="#f2b9c7"/>
+    </g>
+  </svg>
+  <div class="eyebrow">Gestión Humana · Sector Agroindustrial · 2026</div>
+  <h1>Cultivando el futuro: el reto del <em>talento humano</em> en The Elite Flower</h1>
+  <p class="lede">Diagnóstico organizacional, contexto del sector agroindustrial colombiano y un plan de acción que cruza las tendencias globales de talento humano para 2026 con la realidad de una de las empresas agroindustriales más grandes del país.</p>
+  <div class="hero-byline"><span class="who">Elaborado por</span> <b>Yacqueline Leguizamón</b> · <b>Valentina Suárez</b> · <b>Paula Álvarez</b></div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="n">22.000+</div><div class="l">Colaboradores</div></div>
+    <div class="hstat"><div class="n">125+</div><div class="l">Fincas</div></div>
+    <div class="hstat"><div class="n">2.000 M</div><div class="l">Tallos al año</div></div>
+    <div class="hstat"><div class="n">151,7%</div><div class="l">Rotación actual</div></div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="intro"><span class="dot"></span>Introducción</button>
+    <button class="tab" data-tab="empresa"><span class="dot"></span>01 · Empresa y sector</button>
+    <button class="tab" data-tab="retos"><span class="dot"></span>02 · Retos del sector</button>
+    <button class="tab" data-tab="diag"><span class="dot"></span>03 · Diagnóstico</button>
+    <button class="tab" data-tab="plan"><span class="dot"></span>04 · Plan de acción</button>
+    <button class="tab" data-tab="conclu"><span class="dot"></span>05 · Conclusión</button>
+  </nav>
+</div>
+
+<main>
+
+<!-- INTRO -->
+<section class="panel active" id="intro">
+  <div class="sec-num">Introducción</div>
+  <h2>De la tierra a un ramo en Miami</h2>
+  <p class="intro-lede">Colombia es, desde hace más de cinco décadas, uno de los principales proveedores de flores frescas cortadas del mundo.</p>
+  <p>Detrás de cada ramo que llega a una tienda en Miami, Toronto o Madrid hay una cadena productiva extensa: tierra, clima, logística de frío, carga aérea y, sobre todo, <strong>miles de personas</strong> que cultivan, cortan, clasifican y empacan cada tallo a mano.</p>
+  <p>Este blog presenta un análisis integral de <strong>The Elite Flower</strong> desde la perspectiva de gestión humana: un diagnóstico organizacional profundo, el contexto y los retos del sector agroindustrial colombiano respaldados en fuentes verificadas, y un cruce con las principales tendencias globales de talento humano para 2026, con el fin de proponer un plan de acción viable en el corto, mediano y largo plazo.</p>
+  <div class="callouts">
+    <div class="callout"><div class="big">50%</div><div class="cap">de los costos de producción pueden ser mano de obra</div></div>
+    <div class="callout"><div class="big">67%</div><div class="cap">disponibilidad de tiempo efectivo en la jornada</div></div>
+    <div class="callout"><div class="big">55%</div><div class="cap">de los colaboradores del sector son mujeres</div></div>
+  </div>
+</section>
+
+<!-- EMPRESA -->
+<section class="panel" id="empresa">
+  <div class="sec-num">Sección 01</div>
+  <h2>La empresa y el sector</h2>
+
+  <h3>¿Quién es The Elite Flower?</h3>
+  <p>Fundada en <strong>1991 por Peter Hannaford</strong>, se ha consolidado como uno de los mayores productores de rosas a nivel mundial. Cuenta con más de 125 fincas nacionales e internacionales, genera empleo a más de 22.000 personas y distribuye anualmente más de 2.000 millones de tallos.</p>
+
+  <h4>Portafolio de productos</h4>
+  <div class="chips">
+    <span class="chip">🌹 Rosas</span><span class="chip">🌼 Gerberas</span><span class="chip">💐 Alstroemerias</span>
+    <span class="chip">🌸 Claveles</span><span class="chip">🍃 Follajes</span><span class="chip">🫐 Arándanos</span>
+    <span class="chip">🍓 Fresas</span><span class="chip">✨ Diversificados</span>
+  </div>
+  <p>Las operaciones productivas se desarrollan en <strong>Antioquia, Cundinamarca y Boyacá</strong>, además de Ecuador y Kenia.</p>
+
+  <h4>¿A dónde van las flores? — Una dependencia casi total del norte</h4>
+  <div class="dist" id="distBars">
+    <div class="dist-row"><span class="lbl">EE.UU. y Canadá</span><div class="dist-bar"><i data-w="90"></i></div><span class="pct">90%</span></div>
+    <div class="dist-row"><span class="lbl">Europa</span><div class="dist-bar"><i data-w="5"></i></div><span class="pct">5%</span></div>
+    <div class="dist-row"><span class="lbl">Otros países</span><div class="dist-bar"><i data-w="4"></i></div><span class="pct">4%</span></div>
+    <div class="dist-row"><span class="lbl">Mercado nacional</span><div class="dist-bar"><i data-w="1"></i></div><span class="pct">1%</span></div>
+  </div>
+
+  <h3>El sector agroindustrial colombiano</h3>
+  <p>Colombia es el <strong>segundo exportador de flores del mundo</strong> después de Holanda, y el sector representa uno de los pilares más importantes de formalidad laboral en el campo colombiano.</p>
+  <div class="grid three">
+    <div class="card"><div class="k">+240 mil</div><div class="kl">empleos formales generados</div></div>
+    <div class="card"><div class="k">55%</div><div class="kl">colaboradoras mujeres, muchas cabeza de familia</div></div>
+    <div class="card"><div class="k">US$2.400 M</div><div class="kl">en exportaciones anuales</div></div>
+  </div>
+  <p>El gremio que representa a las empresas agroindustriales es <strong>Asocolflores</strong>, que articula estrategias conjuntas de marca empleadora, innovación (a través de Ceniflores) y gestión humana sectorial.</p>
+
+  <h4>Principales compañías del sector</h4>
+  <div class="companies">
+    <div class="co"><b>C.I. Sunshine Bouquet</b>La principal del sector</div>
+    <div class="co"><b>Grupo Elite</b>Incluye a Elite Flower</div>
+    <div class="co"><b>Flores Ipanema</b>Gran escala</div>
+    <div class="co"><b>Grupo Falcon Farms</b>Gran escala</div>
+    <div class="co"><b>Jardines de los Andes</b>Gran escala</div>
+    <div class="co"><b>Flores El Capiro</b>Gran escala</div>
+  </div>
+</section>
+
+<!-- RETOS -->
+<section class="panel" id="retos">
+  <div class="sec-num">Sección 02</div>
+  <h2>Retos del sector agroindustrial</h2>
+  <p>El sector llega a 2026 tras un 2025 calificado por Asocolflores como <strong>"particularmente retador"</strong>: crisis diplomática con EE.UU., aranceles, revaluación del peso y un entorno internacional inestable.</p>
+
+  <h3>Retos de negocio</h3>
+  <p>Haz clic en cada reto para ver el detalle.</p>
+  <div id="accBiz">
+    <div class="acc"><button class="acc-head">Dependencia comercial extrema <span class="ico">+</span></button>
+      <div class="acc-body"><p>El 80% de las exportaciones tiene como destino EE.UU., lo que expone al sector a decisiones arancelarias unilaterales —como el arancel del 10% impuesto por EE.UU.—, una presión directa sobre la rentabilidad.</p></div></div>
+    <div class="acc"><button class="acc-head">Presión cambiaria persistente <span class="ico">+</span></button>
+      <div class="acc-body"><p>La revaluación del peso afecta los ingresos en pesos de un negocio cuyos costos son locales pero cuyos ingresos llegan en dólares.</p></div></div>
+    <div class="acc"><button class="acc-head">Incertidumbre geopolítica y electoral <span class="ico">+</span></button>
+      <div class="acc-body"><p>El contexto electoral de 2026 y la evolución de las relaciones comerciales añaden volatilidad a la planeación de mediano plazo.</p></div></div>
+    <div class="acc"><button class="acc-head">Logística de alta exigencia <span class="ico">+</span></button>
+      <div class="acc-body"><p>Exportar 60 especies y 1.500 variedades a 100 países exige una cadena de frío y carga aérea sin margen de error, con El Dorado como terminal de carga más importante de Latinoamérica.</p></div></div>
+  </div>
+
+  <h3>Retos de talento</h3>
+  <p>La floricultura se divide casi en partes iguales entre <strong>agricultura y logística</strong>, y la mano de obra puede representar hasta el 50% de los costos. Cualquier ineficiencia de talento se vuelve una ineficiencia de negocio inmediata y medible.</p>
+  <div class="grid two">
+    <div class="card"><h4>Rotación y ausentismo</h4><p style="max-width:none">Las temporadas altas (San Valentín, Día de la Madre) generan picos de mano de obra de hasta el 50% adicional, asociados históricamente a alta rotación.</p></div>
+    <div class="card"><h4>Enfoque de género estructural</h4><p style="max-width:none">El 60% de la fuerza laboral son mujeres, muchas madres cabeza de hogar: exige guarderías, rutas seguras y horarios flexibles.</p></div>
+    <div class="card"><h4>Formalización y marca empleadora</h4><p style="max-width:none">La estrategia "Cultivamos con Orgullo Flores de Colombia" busca transformar la percepción del trabajo en el campo hacia un empleo digno y formal.</p></div>
+    <div class="card"><h4>Plataforma Imake</h4><p style="max-width:none">Herramienta de Asocolflores que mide la gestión humana en siete dimensiones, incluyendo clima organizacional y felicidad corporativa.</p></div>
+  </div>
+
+  <blockquote>El negocio de exportación tiene dos partes, un 50% es agricultura y un 50% es logística, porque se requiere ser muy eficiente para el costo y la calidad de la flor.<cite>Augusto Solano · expresidente de Asocolflores</cite></blockquote>
+
+  <h4>Impacto medible en la productividad</h4>
+  <div class="grid three">
+    <div class="card"><div class="k">67%</div><div class="kl">de tiempo efectivo por clima, fatiga o falta de capacitación. Un tercio se pierde.</div></div>
+    <div class="card"><div class="k">+10-15%</div><div class="kl">de eficiencia diaria proyectada con la Escuela de Supervisores</div></div>
+    <div class="card"><div class="k">-8%</div><div class="kl">de defectos en fincas con contratación directa &gt;70%</div></div>
+  </div>
+</section>
+
+<!-- DIAGNÓSTICO -->
+<section class="panel" id="diag">
+  <div class="sec-num">Sección 03</div>
+  <h2>Diagnóstico de The Elite Flower</h2>
+
+  <h3>Retos de negocio de la empresa</h3>
+  <div class="grid two">
+    <div class="card"><h4>Reducción del 35% de la plantilla</h4><p style="max-width:none">Respuesta estructural a la caída del dólar y el contexto sociopolítico — conectada con la presión cambiaria del sector.</p></div>
+    <div class="card"><h4>Alta competencia entre fincas</h4><p style="max-width:none">Un sector ya saturado de grandes actores: Sunshine Bouquet, Falcon Farms, Ipanema, Jardines de los Andes.</p></div>
+    <div class="card"><h4>Variabilidad climática</h4><p style="max-width:none">Bajas temperaturas pasman la flor; las altas la hacen explotar. Afecta directamente la calidad del producto.</p></div>
+    <div class="card"><h4>Resistencia interna a la IA</h4><p style="max-width:none">Rechazo a plataformas de automatización para clasificar flor, lo que limita las ganancias de eficiencia.</p></div>
+  </div>
+
+  <h3>Retos de talento de la empresa</h3>
+  <div class="finding"><h4>Rotación del 151,7%</h4><p style="max-width:none">Muy por encima de cualquier referencia saludable, y superior incluso a los promedios históricos del propio sector.</p></div>
+  <div class="finding"><h4>Casos de acoso laboral y sexual en altos mandos</h4><p style="max-width:none">La contradicción más grave entre la política ética declarada y la práctica real.</p></div>
+  <div class="finding soft"><h4>Clima laboral administrativo</h4><p style="max-width:none">El personal administrativo no logra aprovechar las actividades de bienestar por su carga laboral y nivel de responsabilidad.</p></div>
+  <div class="finding soft"><h4>Desarrollo concentrado arriba</h4><p style="max-width:none">Escuelas de líderes, coaching y becas llegan a jefaturas y mandos medios, pero apenas al nivel operativo —donde está la mayoría de la fuerza laboral.</p></div>
+
+  <h3>Hallazgos centrales del diagnóstico</h3>
+  <p>Aplicando análisis sistémico, las siete dimensiones del ser y el marco <strong>Teoría X / Teoría Y de McGregor</strong>, se identificaron estos patrones estructurales:</p>
+  <div id="accDiag">
+    <div class="acc"><button class="acc-head">Mezcla contradictoria de paradigmas <span class="ico">+</span></button>
+      <div class="acc-body"><p>El liderazgo transita hacia Teoría Y (mejora continua, retroalimentación, modalidades híbridas), mientras la base operativa sigue gestionada bajo lógicas cercanas a Teoría X.</p></div></div>
+    <div class="acc"><button class="acc-head">"Atrofia cultural" <span class="ico">+</span></button>
+      <div class="acc-body"><p>Brecha entre el discurso de bienestar y desarrollo que declara la organización, y la experiencia real: bienestar inaccesible para administrativos, acoso en altos mandos pese a los comités de ética.</p></div></div>
+    <div class="acc"><button class="acc-head">Comunicación descendente <span class="ico">+</span></button>
+      <div class="acc-body"><p>Predominantemente informativa, sin mecanismos sistemáticos de escucha ascendente que permitan detectar tensiones antes de que se vuelvan crisis.</p></div></div>
+    <div class="acc"><button class="acc-head">Costos ocultos significativos <span class="ico">+</span></button>
+      <div class="acc-body"><p>Pérdida de conocimiento técnico-agrícola por la altísima rotación, sobrecarga de líderes de línea media y erosión progresiva de la confianza institucional.</p></div></div>
+  </div>
+  <blockquote>La organización no está completamente lista para enfrentar las tendencias del entorno: su transición hacia una gestión más humanista apenas comienza.<cite>Conclusión central del diagnóstico</cite></blockquote>
+</section>
+
+<!-- PLAN -->
+<section class="panel" id="plan">
+  <div class="sec-num">Sección 04</div>
+  <h2>Plan de acción</h2>
+  <p>Acciones que integran las tendencias globales de talento 2026 —<strong>Mercer, Gartner, McKinsey, Randstad, ManpowerGroup, KPMG</strong> y estudios académicos indexados— cruzadas con los hallazgos del diagnóstico. Ninguna depende de tecnología o presupuesto que la organización no tenga hoy.</p>
+
+  <div class="plan-switch" id="planSwitch">
+    <button class="pbtn active" data-plan="corto">Corto · 0–3 meses</button>
+    <button class="pbtn" data-plan="medio">Mediano · 3–12 meses</button>
+    <button class="pbtn" data-plan="largo">Largo · 1–3 años</button>
+  </div>
+
+  <div class="plan-block active" id="corto">
+    <div class="tl">
+      <div class="tl-item"><div class="tl-when">Mes 1</div><div class="tl-action">Comunicación transparente por finca, liderada por el supervisor directo, sobre qué tareas cambia la automatización y cuáles no.</div><div class="tl-src">Mercer, Tendencia 1</div></div>
+      <div class="tl-item"><div class="tl-when">Mes 1</div><div class="tl-action">Auditoría rápida del uso real de las actividades de bienestar por parte del personal administrativo.</div><div class="tl-src">Mercer, Tendencia 3</div></div>
+      <div class="tl-item"><div class="tl-when">Mes 1–2</div><div class="tl-action">Documentar el conocimiento tácito de los clasificadores más experimentados antes de avanzar en automatización.</div><div class="tl-src">KPMG Global Tech Report</div></div>
+      <div class="tl-item"><div class="tl-when">Mes 2</div><div class="tl-action">Cruzar datos de rotación y cobertura de turnos por finca para priorizar las 2–3 de mayor riesgo.</div><div class="tl-src">Mercer, Tendencia 2</div></div>
+      <div class="tl-item"><div class="tl-when">Mes 2–3</div><div class="tl-action">Crear un canal específico (buzón o línea directa) para preocupaciones sobre cambios tecnológicos.</div><div class="tl-src">Hallazgos21 — IA en gestión del talento</div></div>
+    </div>
+  </div>
+
+  <div class="plan-block" id="medio">
+    <div class="tl">
+      <div class="tl-item"><div class="tl-when">Mes 4–6</div><div class="tl-action">Extender la capacitación en nuevas herramientas al personal operativo, no solo a jefaturas.</div><div class="tl-src">Gartner / KPMG</div></div>
+      <div class="tl-item"><div class="tl-when">Mes 4–8</div><div class="tl-action">Conversaciones trimestrales obligatorias entre cada supervisor y su equipo, con guía simple de desarrollo.</div><div class="tl-src">Mercer / Revisión InveCom</div></div>
+      <div class="tl-item"><div class="tl-when">Mes 5–8</div><div class="tl-action">Módulo de "gestión del miedo al cambio" en las escuelas de líderes, distinto de la capacitación técnica.</div><div class="tl-src">Qualitas — Liderazgo adaptativo e IA</div></div>
+      <div class="tl-item"><div class="tl-when">Mes 4–8</div><div class="tl-action">Redirigir parte del presupuesto de liderazgo hacia jefes de turno y supervisores de finca.</div><div class="tl-src">Randstad Workmonitor 2026</div></div>
+      <div class="tl-item"><div class="tl-when">Mes 6–10</div><div class="tl-action">Encuesta corta y anónima sobre la coherencia entre cultura declarada y cultura vivida.</div><div class="tl-src">Gartner — atrofia cultural</div></div>
+      <div class="tl-item"><div class="tl-when">Mes 3–9</div><div class="tl-action">Vincular la evaluación de desempeño a incentivos tangibles: formación prioritaria, movilidad interna, ajustes salariales.</div><div class="tl-src">Revisión sistemática InveCom/SciELO</div></div>
+    </div>
+  </div>
+
+  <div class="plan-block" id="largo">
+    <div class="tl">
+      <div class="tl-item"><div class="tl-when">Año 1–2</div><div class="tl-action">Incorporar de forma permanente a Formación/Talento en el comité de mejoramiento continuo.</div><div class="tl-src">Mercer, Tendencia 4</div></div>
+      <div class="tl-item"><div class="tl-when">Año 1–2</div><div class="tl-action">Rediseñar el equipo de Formación con tiempo explícito dedicado a la gestión del cambio.</div><div class="tl-src">Gartner / McKinsey HR Monitor</div></div>
+      <div class="tl-item"><div class="tl-when">Año 1–3</div><div class="tl-action">Construir inteligencia básica de la fuerza laboral cruzando datos ya existentes en Kactus/Excel.</div><div class="tl-src">Mercer, Tendencia 2</div></div>
+      <div class="tl-item"><div class="tl-when">Año 2–3</div><div class="tl-action">Evaluar herramientas sectoriales como Imake (Asocolflores) para benchmarking de gestión humana.</div><div class="tl-src">Fuentes sectoriales — Asocolflores</div></div>
+      <div class="tl-item"><div class="tl-when">Año 2–3</div><div class="tl-action">Avanzar hacia equipos híbridos humano-IA en clasificación, solo tras resolver confianza y capacitación.</div><div class="tl-src">KPMG Global Tech Report</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSIÓN -->
+<section class="panel" id="conclu">
+  <div class="sec-num">Sección 05</div>
+  <h2>Conclusión</h2>
+  <p class="intro-lede">No es un problema de falta de iniciativas, sino de integración.</p>
+  <p>Existen programas de bienestar, escuelas de liderazgo, comités de ética y procesos de mejoramiento continuo —pero operan <strong>desconectados entre sí</strong> y, sobre todo, desconectados de la experiencia real del nivel operativo, donde se concentra tanto la mayor parte de la fuerza laboral como el problema de rotación más crítico.</p>
+  <p>Las tendencias globales de talento para 2026 —de Mercer a Gartner, KPMG y Randstad— coinciden en un mismo punto de apalancamiento: la capacidad del <strong>liderazgo de línea media</strong> para sostener la confianza, acompañar el cambio tecnológico y traducir el desarrollo del talento en resultados reales.</p>
+  <div class="callouts">
+    <div class="callout"><div class="big">↺</div><div class="cap">Revertir la rotación</div></div>
+    <div class="callout"><div class="big">🧠</div><div class="cap">Frenar la pérdida de conocimiento</div></div>
+    <div class="callout"><div class="big">🤝</div><div class="cap">Reconstruir la confianza institucional</div></div>
+  </div>
+  <p>Priorizar el liderazgo de línea media, comunicar con transparencia la automatización e integrar mejor los procesos ya existentes es el camino <strong>más viable y de menor costo</strong> para empezar a revertir los costos ocultos más urgentes de The Elite Flower.</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="fl">🌹 The Elite Flower · Análisis de Gestión Humana</div>
+  <p style="margin-bottom:1.2rem"><b style="color:#fff">Elaborado por:</b> Yacqueline Leguizamón · Valentina Suárez · Paula Álvarez</p>
+  <p>Diagnóstico organizacional · Tendencias globales de talento 2026 · Plan de acción. Fuentes: Asocolflores, Mercer Global Talent Trends, Gartner, McKinsey HR Monitor, Randstad Workmonitor, ManpowerGroup, KPMG Global Tech Report.</p>
+</footer>
+
+<script>
+  // --- Tabs ---
+  const tabs=document.querySelectorAll('.tab');
+  const panels=document.querySelectorAll('.panel');
+  const mainEl=document.querySelector('main');
+  const tabsH=document.querySelector('.tabs-wrap');
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    panels.forEach(p=>p.classList.remove('active'));
+    t.classList.add('active');
+    const panel=document.getElementById(t.dataset.tab);
+    panel.classList.add('active');
+    // bajar al inicio del contenido, justo debajo de la barra de pestañas
+    const offset=tabsH.offsetHeight;
+    const top=mainEl.getBoundingClientRect().top + window.pageYOffset - offset - 8;
+    window.scrollTo({top:top,behavior:'smooth'});
+    if(t.dataset.tab==='empresa') animateBars();
+  }));
+
+  // --- Accordions ---
+  document.querySelectorAll('.acc-head').forEach(h=>{
+    h.addEventListener('click',()=>h.parentElement.classList.toggle('open'));
+  });
+
+  // --- Plan switch ---
+  const pbtns=document.querySelectorAll('.pbtn');
+  pbtns.forEach(b=>b.addEventListener('click',()=>{
+    pbtns.forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.plan-block').forEach(p=>p.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.plan).classList.add('active');
+  }));
+
+  // --- Animate distribution bars ---
+  let barsDone=false;
+  function animateBars(){
+    document.querySelectorAll('#distBars i').forEach(i=>{
+      requestAnimationFrame(()=>{i.style.width=i.dataset.w+'%';});
+    });
+  }
+</script>
+</body>
+</html>
